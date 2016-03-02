@@ -1,12 +1,12 @@
 {
   "name": "openstack-ovn",
   "version": "0.1.0",
-  "author": "OVN and Openstack contributors",
+  "author": "OVN and OpenStack contributors",
   "summary": "Modules to setup ovn-northd and ovn-controller",
   "license": "Apache-2.0",
   "source": "",
-  "project_page": null,
-  "issues_url": null,
+  "project_page": "http://ovn.org",
+  "issues_url": "http://ovn.org/mlists/",
   "dependencies": []
 }
 

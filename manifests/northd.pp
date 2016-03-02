@@ -1,3 +1,8 @@
+# ovn northd
+# == Class: ovn::northd
+#
+# installs ovn package starts the ovn-northd service
+#
 class ovn::northd() {
     include ovn::params
     service { 'northd':

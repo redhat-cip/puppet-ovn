@@ -1,5 +1,25 @@
+# ovn controller
+# == Class: ovn::controller
+#
+# installs ovn and starts the ovn-controller service
+#
+# === Parameters:
+#
+# [*ovn_remote*]
+#   URL of the remote ovsdb-server that manages ovn-nb and ovn-sb dbs
+#
+# [*ovn_enap_type*]
+#   (Optional) The encapsulation type to be used
+#   Defaults to 'geneve'
+#
+# [*ovn_ecap_ip*]
+#   IP address of the hypervisor(in which this module is installed) to which
+#   the other controllers would use to create a tunnel to this controller
+#
 class ovn::controller(
-    $ovn_remote = undef
+    $ovn_remote = undef,
+    $ovn_encap_type = "geneve",
+    $ovn_encap_ip = undef
 ) {
     include ovn::params
     include vswitch
@@ -8,7 +28,9 @@ class ovn::controller(
         name   => $::ovn::params::ovn_controller_service_name,
         ensure => true,
         enable => true,
-        require => Exec['ovn-remote']
+        require => [Vs_config['external_ids:ovn-remote'],
+                    Vs_config['external_ids:ovn-encap-type'],
+                    Vs_config['external_ids:ovn-encap-ip']]                   
     }
 
     package { 'controller':
@@ -17,15 +39,21 @@ class ovn::controller(
         before => Service['controller']
     }
 
-    exec { 'ovn-remote':
-        command  => "ovs-vsctl set open . external-ids:ovn-remote=$ovn_remote",
-        onlyif   => "test `ovs-vsctl get open . external_ids:ovn-remote 2> /dev/null` != $ovn_remote",
-        require  => Service['openvswitch'],
-        path     => "/usr/bin:/usr/sbin"
+    vs_config { 'external_ids:ovn-remote':
+        ensure  => present,
+        value   => $ovn_remote,
+        require => Service['openvswitch'],
     }
 
-    vs_bridge {"br-int":
-        ensure => present,
-        subscribe => Service['controller']
+    vs_config { "external_ids:ovn-encap-type":
+        ensure  => present,
+        value   => $ovn_encap_type,
+        require => Service['openvswitch'],
+    }
+
+    vs_config { "external_ids:ovn-encap-ip":
+        ensure  => present,
+        value   => $ovn_encap_ip,
+        require => Service['openvswitch'],
     }
 }

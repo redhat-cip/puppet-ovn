@@ -1,4 +1,4 @@
-# ovn
+# OVN
 
 #### Table of Contents
 
@@ -6,74 +6,31 @@
 2. [Module Description - What the module does and why it is useful](#module-description)
 3. [Setup - The basics of getting started with ovn](#setup)
     * [What ovn affects](#what-ovn-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with ovn](#beginning-with-ovn)
-4. [Usage - Configuration options and additional functionality](#usage)
-5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+Puppet module for the OVN project. At the moment this support OVN 
+installation in Redhat platform's only. One can add the support for
+other platforms by defining them in ovn::params module
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
-
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
+This module has two class
+1. ovn::northd to be used in machines that needs to run ovn-northd daemon
+2. ovn::controller to be used in the compute nodes
 
 ## Setup
 
-### What ovn affects
+### Effects
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
-
-### Beginning with ovn
-
-The very basic steps needed for a user to get the module up and running.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
-
-## Usage
-
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
-
-## Reference
-
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
-
-## Limitations
-
-This is where you list OS compatibility, version compatibility, etc.
-
-## Development
-
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
-
-## Release Notes/Contributors/Etc **Optional**
-
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You may also add any additional sections you feel are
-necessary or important to include here. Please use the `## ` header.
+ovn::northd just installs the ovn package and starts the ovn-northd serivce.
+ovn::controller installs ovn package and starts the ovn-controller service.
+Before starting ovn-controller process it updates the external_ids column
+of Open_vSwitch table in vswitchd ovsdb. It relies on external data for some
+of its parameters
+* ovn_remote_ip - This should point to the url where ovn-nb and ovn-sb 
+  db server is running
+* ovn_encap_ip - This should point to the ip address that other hypervisors
+  would use to tunnel to this hypervisor.
+* ovn_encap_type - Encapsulation type to be used by this controller. Defaults
+  to geneve

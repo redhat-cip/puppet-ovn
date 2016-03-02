@@ -1,3 +1,8 @@
+# ovn params
+# == Class: ovn::params
+#
+# This class defines the variable like 
+
 class ovn::params {
     case $::osfamily {
         'Redhat': {
