@@ -5,10 +5,13 @@
 
 class ovn::params {
     case $::osfamily {
-        'Redhat': {
-            $ovn_package_name            = "openvswitch-ovn"
-            $ovn_northd_service_name     = "ovn-northd"
-            $ovn_controller_service_name = "ovn-controller"
-        }
+      'Redhat': {
+          $ovn_package_name            = 'openvswitch-ovn'
+          $ovn_northd_service_name     = 'ovn-northd'
+          $ovn_controller_service_name = 'ovn-controller'
+      }
+      default: {
+        fail " Osfamily ${::osfamily} not supported yet"
+      }
     }
 }

@@ -4,7 +4,7 @@
 # installs ovn package starts the ovn-northd service
 #
 class ovn::northd() {
-    include ovn::params
+    include $::ovn::params
     service { 'northd':
         ensure => true,
         enable => true,
@@ -12,8 +12,8 @@ class ovn::northd() {
     }
 
     package { 'ovn':
+        ensure => present,
         name   => $::ovn::params::ovn_package_name,
-        ensure => 'present',
         before => Service['northd']
     }
 }
