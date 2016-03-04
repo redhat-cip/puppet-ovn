@@ -23,11 +23,12 @@ class ovn::controller(
 ) {
     include ::ovn::params
     include ::vswitch::ovs
+    include ::stdlib
 
-#validate_string($ovn_remote)
-#validate_ip_address($ovn_encap_ip)
+    validate_string($ovn_remote)
+    validate_string($ovn_encap_ip)
 
-    service { $::ovn::params::ovn_controller_service_name:
+    service { 'controller':
         ensure  => true,
         name    => $::ovn::params::ovn_controller_service_name,
         enable  => true,
