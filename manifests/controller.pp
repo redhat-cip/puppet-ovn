@@ -21,10 +21,13 @@ class ovn::controller(
     $ovn_encap_type = 'geneve',
     $ovn_encap_ip = undef
 ) {
-    include $::ovn::params
-    include $::vswitch
+    include ::ovn::params
+    include ::vswitch::ovs
 
-    service { 'controller':
+#validate_string($ovn_remote)
+#validate_ip_address($ovn_encap_ip)
+
+    service { $::ovn::params::ovn_controller_service_name:
         ensure  => true,
         name    => $::ovn::params::ovn_controller_service_name,
         enable  => true,
@@ -33,7 +36,7 @@ class ovn::controller(
                     Vs_config['external_ids:ovn-encap-ip']]
     }
 
-    package { 'controller':
+    package { $::ovn::params::ovn_package_name:
         ensure => present,
         name   => $::ovn::params::ovn_package_name,
         before => Service['controller']
